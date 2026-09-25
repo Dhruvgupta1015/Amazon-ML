@@ -1,0 +1,18 @@
+{
+  "run_id": "champion-heuristic-v1",
+  "timestamp": "2026-09-25T16:15:00Z",
+  "model": "High-Precision Rule & Address Conflict Heuristic (models/champion_heuristic.py)",
+  "macro_f05": 0.7930,
+  "precision": 0.9757,
+  "recall": 0.6945,
+  "singleton_accuracy": 0.9417,
+  "blocking_recall": 0.8719,
+  "reduction_ratio": 0.999921,
+  "false_merges": 98,
+  "missed_matches": 6124,
+  "threshold": 0.56,
+  "dataset_hash": "sha256_a27ce6c4621aefc2",
+  "validation_protocol": "Frozen Entity-Stratified Grouped S1 Split (20,000 entities, Seed=42)",
+  "git_commit": "64901d7",
+  "status": "CHAMPION_ACTIVE"
+}

@@ -22,6 +22,46 @@
 
 ---
 
+## 🏆 Champion–Challenger Architecture (No-Regression Invariant)
+
+To prevent performance regressions and ensure reproducible progress, the repository enforces an automated **Champion–Challenger Quality Gate** (`scripts/quality_gate.py`):
+
+```
+                        FIXED VALIDATION SET (20k Entities)
+                                         │
+             ┌───────────────────────────┴───────────────────────────┐
+             ▼                                                       ▼
+       CHAMPION MODEL                                        CHALLENGER EXPERIMENT
+   (models/champion_heuristic.py)                          (LightGBM / Hybrid Models)
+       Macro F0.5 = 0.7930                                    Evaluated on Frozen Split
+             │                                                       │
+             └───────────────────────────┬───────────────────────────┘
+                                         ▼
+                                   QUALITY GATE
+                         (scripts/quality_gate.py)
+                                         │
+                 ┌───────────────────────┴───────────────────────┐
+                 ▼                                               ▼
+         Challenger > Champion                           Challenger ≤ Champion
+        (Delta >= +0.0020 F0.5)                         (Or Singleton Acc < 0.90)
+                 │                                               │
+               ACCEPT                                          REJECT
+                 │                                               │
+         Promote to Champion                           Save Rejection Record
+          (Deploy to Web)                              (reports/rejected_*.json)
+```
+
+### Active Production Champion:
+- **Model**: High-Precision Rule & Address Conflict Heuristic ([`models/champion_heuristic.py`](file:///models/champion_heuristic.py))
+- **Validated Macro $F_{0.5}$**: **0.7930**
+- **Macro Precision**: **0.9757 (97.57%)**
+- **Macro Recall**: **0.6945 (69.45%)**
+- **Singleton Accuracy**: **0.9417 (94.17%)**
+- **False Merges**: **98**
+- **Status**: `CHAMPION_ACTIVE` ([`reports/champion.json`](file:///reports/champion.json))
+
+---
+
 ## 📊 Empirical Validation & Benchmark Comparison (Phase 12 Deliverables)
 
 All metrics below are strictly empirical, backed by concrete JSON/CSV artifacts in `reports/`:
@@ -54,6 +94,9 @@ VERIFICATION:
 ```
 
 ### Reproducible Evaluation Reports:
+- [Active Champion Metadata](file:///reports/champion.json) (`reports/champion.json`)
+- [Multi-Channel Blocking Comparison](file:///reports/blocking_comparison.csv) (`reports/blocking_comparison.csv`)
+- [Rejected Challenger Record (Hybrid)](file:///reports/rejected_experiment_challenger-hybrid-v2.json) (`reports/rejected_experiment_challenger-hybrid-v2.json`)
 - [Pipeline Audit Report](file:///reports/pipeline_audit.md) (`reports/pipeline_audit.md`)
 - [Implementation Status JSON](file:///reports/implementation_status.json) (`reports/implementation_status.json`)
 - [Dataset Profile Markdown](file:///reports/dataset_profile.md) (`reports/dataset_profile.md`)

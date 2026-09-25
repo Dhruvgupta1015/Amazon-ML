@@ -1,0 +1,39 @@
+{
+  "run_id": "run-20260925-155749",
+  "timestamp": "2026-09-25T16:18:27.128083",
+  "status": "REJECTED_BY_QUALITY_GATE",
+  "rejection_reason": "Macro F0.5 (0.3973) failed to beat Champion (0.7930) by minimum delta (+0.0020). Delta was -0.3957.",
+  "challenger_metrics": {
+    "run_id": "run-20260925-155749",
+    "timestamp": "2026-09-25T15:57:49.337540",
+    "dataset_hash": "sha256_2ef67d10ddeba9e9",
+    "validation_protocol": "Entity-Stratified Grouped S1 Split (20,000 entities, Seed=42)",
+    "model": "RESOLVE.AI LightGBM GBDT (300 trees, 63 leaves) + 28 Pairwise Features + Hard Negatives",
+    "threshold": 0.69,
+    "macro_f05": 0.3973465682258004,
+    "precision": 0.4462472360717158,
+    "recall": 0.745664503968254,
+    "blocking_recall": 0.8719,
+    "reduction_ratio": 0.999878,
+    "singleton_accuracy": 0.23070017953321365,
+    "runtime_seconds": 171.59
+  },
+  "active_champion_metrics": {
+    "run_id": "champion-heuristic-v1",
+    "timestamp": "2026-09-25T16:15:00Z",
+    "model": "High-Precision Rule & Address Conflict Heuristic (models/champion_heuristic.py)",
+    "macro_f05": 0.793,
+    "precision": 0.9757,
+    "recall": 0.6945,
+    "singleton_accuracy": 0.9417,
+    "blocking_recall": 0.8719,
+    "reduction_ratio": 0.999921,
+    "false_merges": 98,
+    "missed_matches": 6124,
+    "threshold": 0.56,
+    "dataset_hash": "sha256_a27ce6c4621aefc2",
+    "validation_protocol": "Frozen Entity-Stratified Grouped S1 Split (20,000 entities, Seed=42)",
+    "git_commit": "64901d7",
+    "status": "CHAMPION_ACTIVE"
+  }
+}

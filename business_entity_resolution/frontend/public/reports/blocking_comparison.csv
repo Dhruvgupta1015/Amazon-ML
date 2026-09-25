@@ -1,0 +1,15 @@
+strategy,pair_recall,entity_recall,avg_candidates,candidate_count,reduction_ratio,runtime_seconds
+1. Exact Normalized Name,38.08,9.71,2.28,45554,99.9993,0.05
+2. Name Word Tokens (Inverted Index),50.25,35.85,102.93,2058672,99.9676,0.23
+3. Character 3-Gram Overlap,19.7,12.62,180.05,3600949,99.9433,0.38
+4. Character 4-Gram Overlap,56.1,37.08,102.48,2049629,99.9677,0.31
+5. Address Tokens & Locality,68.53,51.32,118.61,2372151,99.9627,0.25
+6. Street Number & Address Digits,30.24,18.6,33.99,679714,99.9893,0.09
+7. Domain URL Stem Matching,0.0,0.0,0.0,0,100.0,0.02
+8. Multi-Channel Union (Ranked Top-25),62.91,45.78,24.69,493731,99.9922,5.37
+8. Multi-Channel Union (Ranked Top-50),64.46,48.71,48.81,976241,99.9846,5.56
+8. Multi-Channel Union (Ranked Top-75),65.03,49.78,71.31,1426276,99.9775,6.04
+8. Multi-Channel Union (Ranked Top-100),65.21,50.14,91.47,1829394,99.9712,6.03
+8. Multi-Channel Union (Ranked Top-150),65.28,50.29,120.28,2405515,99.9621,5.89
+8. Multi-Channel Union (Ranked Top-200),65.29,50.3,132.7,2653922,99.9582,5.89
+8. Multi-Channel Union (Ranked Top-300),65.29,50.31,136.23,2724692,99.9571,5.89
