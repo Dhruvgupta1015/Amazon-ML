@@ -1,0 +1,8 @@
+metric,value
+total_validation_s1_entities,20000
+total_singletons,1114
+singleton_proportion_pct,5.57
+singletons_correctly_rejected,257
+singleton_accuracy_pct,23.07
+false_merges_on_singletons,14856
+singleton_contribution_to_f05,0.0129

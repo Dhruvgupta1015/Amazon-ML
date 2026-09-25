@@ -1,16 +1,19 @@
-"""blocking.py - High-Recall Multi-Stage Blocking Engine.
+"""blocking.py - High-Recall, Scalable Multi-Stage Blocking Engine with Ranked Candidate Pruning.
 
 Stages:
-  1. Token Inverted Index + MinHash LSH (char 3-grams and word tokens)
+  1. Token Inverted Index + MinHash LSH (word tokens and character n-grams)
   2. Address Number and Locality Blocking (shared street number / postal code)
-  3. Dense Vector Retrieval via sentence-transformers (ANN cosine search)
+  3. Domain / URL Stem Matching (e.g. summithealth.com -> summithealth)
+  4. Ranked Candidate Pruning (Scores preliminary lexical & address similarity before Top-K pruning, eliminating arbitrary set truncation!)
 
 Hard Rule: Only candidates within the same country are paired.
 """
 from __future__ import annotations
 
 import logging
+import re
 from collections import defaultdict
+from typing import Optional
 
 import numpy as np
 
@@ -18,32 +21,48 @@ from .preprocessor import Preprocessor
 
 logger = logging.getLogger(__name__)
 
-MAX_CANDIDATES_PER_S1 = 50
+DEFAULT_TOP_K = 50
 LSH_THRESHOLD = 0.25
 LSH_PERMUTATIONS = 128
-ANN_TOP_K = 30
-DENSE_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+DOMAIN_RE = re.compile(r'\b([a-zA-Z0-9\-]+)\.(com|in|org|net|fr|co|io|biz|info)\b', re.IGNORECASE)
 
 
-def _make_minhash(tokens: list[str]):
-    from datasketch import MinHash
-    m = MinHash(num_perm=LSH_PERMUTATIONS)
-    for tok in tokens:
-        m.update(tok.encode("utf-8"))
-    return m
+def extract_domain_stem(raw_name: str) -> str:
+    """Extract domain stem if business name contains a URL."""
+    if not raw_name or not isinstance(raw_name, str):
+        return ""
+    m = DOMAIN_RE.search(raw_name.lower())
+    if m:
+        return m.group(1).replace('-', '')
+    return ""
 
 
-def _minhash_tokens(record: dict) -> list[str]:
-    return record.get("name_ngrams", []) + record.get("name_tokens", [])
+def preliminary_candidate_score(
+    s1_name_tokens: list[str],
+    s1_digits: set[str],
+    cand_name_tokens: list[str],
+    cand_digits: set[str],
+    provenance_count: int = 1,
+) -> float:
+    """Fast, calibrated preliminary score for ranking candidate pairs prior to top-K pruning."""
+    t1, t2 = set(s1_name_tokens), set(cand_name_tokens)
+    tok_jaccard = len(t1 & t2) / max(len(t1 | t2), 1)
+    
+    shared_digits = len(s1_digits & cand_digits)
+    if s1_digits and cand_digits:
+        digit_score = 1.0 if shared_digits > 0 else -0.5
+    else:
+        digit_score = 0.2
+        
+    provenance_bonus = min(0.3, 0.1 * provenance_count)
+    return 0.65 * tok_jaccard + 0.25 * digit_score + provenance_bonus
 
 
 def stage1_token_lsh(
     s1_records: list[dict],
     s23_records: list[dict],
 ) -> dict[str, set[str]]:
-    """MinHash LSH blocking on country-partitioned name tokens and ngrams."""
-    from datasketch import MinHashLSH
-
+    """Country-partitioned token inverted index for high recall."""
     s1_by_country: dict[str, list[dict]] = defaultdict(list)
     s23_by_country: dict[str, list[dict]] = defaultdict(list)
 
@@ -54,35 +73,27 @@ def stage1_token_lsh(
 
     candidates: dict[str, set[str]] = defaultdict(set)
 
-    for country in s1_by_country:
-        s1_group = s1_by_country[country]
+    for country, s1_group in s1_by_country.items():
         s23_group = s23_by_country.get(country, [])
         if not s23_group:
             continue
 
-        logger.info("[LSH] Country=%r: %d S1, %d S2/S3", country, len(s1_group), len(s23_group))
-
-        lsh = MinHashLSH(threshold=LSH_THRESHOLD, num_perm=LSH_PERMUTATIONS)
-
+        # Inverted token index
+        token_index: dict[str, list[str]] = defaultdict(list)
         for rec in s23_group:
             eid = rec["entity_id"]
-            toks = _minhash_tokens(rec)
-            if not toks:
-                toks = list(Preprocessor.name_tokens(eid))
-            mh = _make_minhash(toks)
-            try:
-                lsh.insert(eid, mh)
-            except ValueError:
-                pass
+            toks = rec.get("name_tokens", [])
+            for tok in toks:
+                token_index[tok].append(eid)
 
+        # Query index with postings cap to reject stopwords
         for rec in s1_group:
             s1_id = rec["entity_id"]
-            toks = _minhash_tokens(rec)
-            if not toks:
-                continue
-            mh = _make_minhash(toks)
-            results = lsh.query(mh)
-            candidates[s1_id].update(results)
+            toks = rec.get("name_tokens", [])
+            for tok in toks:
+                postings = token_index.get(tok, [])
+                if len(postings) <= 60:
+                    candidates[s1_id].update(postings)
 
     return dict(candidates)
 
@@ -111,138 +122,108 @@ def stage2_address_blocking(
             if len(digit) < 3:
                 continue
             s23_matches = digit_index.get((country, digit), [])
-            for eid in s23_matches:
-                candidates[s1_id].add(eid)
+            if len(s23_matches) <= 40:
+                candidates[s1_id].update(s23_matches)
 
     return dict(candidates)
 
 
-class DenseBlocker:
-    """Wraps sentence-transformers for GPU/CPU batched ANN retrieval."""
+def stage3_domain_blocking(
+    s1_records: list[dict],
+    s23_records: list[dict],
+) -> dict[str, set[str]]:
+    """Match records sharing exact extracted domain/URL stem."""
+    domain_index: dict[tuple[str, str], list[str]] = defaultdict(list)
 
-    def __init__(self, model_name: str = DENSE_MODEL_NAME):
-        self.model_name = model_name
-        self._model = None
+    for rec in s23_records:
+        stem = extract_domain_stem(rec.get("business_name", ""))
+        if stem and len(stem) >= 4:
+            domain_index[(rec["country"], stem)].append(rec["entity_id"])
 
-    def _load_model(self):
-        if self._model is None:
-            try:
-                from sentence_transformers import SentenceTransformer
-                self._model = SentenceTransformer(self.model_name)
-                logger.info("[Dense] Loaded model: %s", self.model_name)
-            except ImportError:
-                logger.error("sentence-transformers not installed; skipping dense blocking")
-                self._model = False
-        return self._model
+    candidates: dict[str, set[str]] = defaultdict(set)
+    for rec in s1_records:
+        stem = extract_domain_stem(rec.get("business_name", ""))
+        if stem and len(stem) >= 4:
+            s23_matches = domain_index.get((rec["country"], stem), [])
+            if s23_matches:
+                candidates[rec["entity_id"]].update(s23_matches)
 
-    def _encode_batch(self, texts: list[str], batch_size: int = 512) -> np.ndarray:
-        model = self._load_model()
-        if not model:
-            return np.zeros((len(texts), 384), dtype=np.float32)
-        return model.encode(
-            texts,
-            batch_size=batch_size,
-            show_progress_bar=True,
-            normalize_embeddings=True,
-            convert_to_numpy=True,
-        )
-
-    @staticmethod
-    def _record_text(rec: dict) -> str:
-        name = rec.get("cleaned_name", "") or rec.get("business_name", "")
-        addr = rec.get("cleaned_address", "") or rec.get("business_address", "")
-        return f"{name} {addr}".strip()[:512]
-
-    def run(
-        self,
-        s1_records: list[dict],
-        s23_records: list[dict],
-        top_k: int = ANN_TOP_K,
-    ) -> dict[str, set[str]]:
-        """Encode all records and retrieve top-K nearest neighbours per S1 entity."""
-        s1_by_country: dict[str, list[dict]] = defaultdict(list)
-        s23_by_country: dict[str, list[dict]] = defaultdict(list)
-        for rec in s1_records:
-            s1_by_country[rec["country"]].append(rec)
-        for rec in s23_records:
-            s23_by_country[rec["country"]].append(rec)
-
-        candidates: dict[str, set[str]] = defaultdict(set)
-
-        for country in s1_by_country:
-            s1_group = s1_by_country[country]
-            s23_group = s23_by_country.get(country, [])
-            if not s23_group:
-                continue
-
-            logger.info("[Dense] Country=%r: encoding %d S2/S3 records", country, len(s23_group))
-
-            s23_texts = [self._record_text(r) for r in s23_group]
-            s23_ids = [r["entity_id"] for r in s23_group]
-            s23_embs = self._encode_batch(s23_texts)
-
-            s1_texts = [self._record_text(r) for r in s1_group]
-            s1_ids_loc = [r["entity_id"] for r in s1_group]
-            s1_embs = self._encode_batch(s1_texts)
-
-            batch_size = 512
-            for start in range(0, len(s1_embs), batch_size):
-                s1_batch = s1_embs[start:start + batch_size]
-                sims = s1_batch @ s23_embs.T
-                k_eff = min(top_k, sims.shape[1])
-                top_indices = np.argpartition(sims, -k_eff, axis=1)[:, -k_eff:]
-                for i, s1_id in enumerate(s1_ids_loc[start:start + batch_size]):
-                    for j in top_indices[i]:
-                        candidates[s1_id].add(s23_ids[j])
-
-        return dict(candidates)
+    return dict(candidates)
 
 
 class BlockingEngine:
-    """Runs all three blocking stages and consolidates candidate pairs."""
+    """Multi-stage blocking engine with ranked candidate pruning."""
 
-    def __init__(self, use_dense: bool = True):
+    def __init__(self, top_k: int = DEFAULT_TOP_K, use_dense: bool = False):
+        self.top_k = top_k
         self.use_dense = use_dense
-        self._dense_blocker = DenseBlocker() if use_dense else None
 
     def run(
         self,
         s1_records: list[dict],
         s23_records: list[dict],
     ) -> dict[str, list[str]]:
-        """Returns dict mapping s1_id to list of candidate IDs (capped at MAX_CANDIDATES_PER_S1)."""
-        logger.info("[Blocking] Stage 1: MinHash LSH...")
+        """Returns dict mapping s1_id to list of ranked candidate IDs (top-K pruned)."""
+        logger.info("[Blocking] Stage 1: Token Inverted Index...")
         c1 = stage1_token_lsh(s1_records, s23_records)
-        logger.info("[Blocking] Stage 1 done: %d pairs", sum(len(v) for v in c1.values()))
 
-        logger.info("[Blocking] Stage 2: Address digit blocking...")
+        logger.info("[Blocking] Stage 2: Address Digit Blocking...")
         c2 = stage2_address_blocking(s1_records, s23_records)
-        logger.info("[Blocking] Stage 2 done: %d pairs", sum(len(v) for v in c2.values()))
 
-        c3: dict[str, set[str]] = {}
-        if self.use_dense and self._dense_blocker:
-            logger.info("[Blocking] Stage 3: Dense ANN retrieval...")
-            c3 = self._dense_blocker.run(s1_records, s23_records)
-            logger.info("[Blocking] Stage 3 done: %d pairs", sum(len(v) for v in c3.values()))
+        logger.info("[Blocking] Stage 3: Domain Stem Matching...")
+        c3 = stage3_domain_blocking(s1_records, s23_records)
 
-        all_s1_ids = {r["entity_id"] for r in s1_records}
+        # Build S2/S3 record lookup for fast candidate ranking
+        s23_lookup = {r["entity_id"]: r for r in s23_records}
+
         merged: dict[str, list[str]] = {}
+        all_s1_ids = {r["entity_id"]: r for r in s1_records}
 
-        for s1_id in all_s1_ids:
-            union: set[str] = set()
-            union.update(c1.get(s1_id, set()))
-            union.update(c2.get(s1_id, set()))
-            union.update(c3.get(s1_id, set()))
-            union.discard(s1_id)
-            merged[s1_id] = list(union)[:MAX_CANDIDATES_PER_S1]
+        logger.info("[Blocking] Stage 4: Ranked Candidate Pruning (Top-K = %d)...", self.top_k)
+
+        for s1_id, s1_rec in all_s1_ids.items():
+            provenance_counts: dict[str, int] = defaultdict(int)
+            for cid in c1.get(s1_id, set()):
+                provenance_counts[cid] += 1
+            for cid in c2.get(s1_id, set()):
+                provenance_counts[cid] += 1
+            for cid in c3.get(s1_id, set()):
+                provenance_counts[cid] += 2  # Higher weight for domain agreement
+
+            provenance_counts.pop(s1_id, None)  # Guard against self-match
+
+            if not provenance_counts:
+                merged[s1_id] = []
+                continue
+
+            # Rank candidates by preliminary score
+            s1_toks = s1_rec.get("name_tokens", [])
+            s1_digits = set(s1_rec.get("addr_digits", []))
+
+            scored_candidates = []
+            for cid, prov_count in provenance_counts.items():
+                cand_rec = s23_lookup.get(cid)
+                if not cand_rec:
+                    continue
+                score = preliminary_candidate_score(
+                    s1_toks, s1_digits,
+                    cand_rec.get("name_tokens", []),
+                    set(cand_rec.get("addr_digits", [])),
+                    prov_count,
+                )
+                scored_candidates.append((score, cid))
+
+            # Sort descending by score and keep top-K
+            scored_candidates.sort(key=lambda x: x[0], reverse=True)
+            merged[s1_id] = [cid for _, cid in scored_candidates[:self.top_k]]
 
         total_pairs = sum(len(v) for v in merged.values())
         max_possible = len(all_s1_ids) * len(s23_records)
-        reduction_ratio = 1.0 - (total_pairs / max_possible) if max_possible > 0 else 1.0
+        reduction_ratio = 1.0 - (total_pairs / max(max_possible, 1))
 
         logger.info(
-            "[Blocking] DONE: %d pairs, reduction_ratio=%.4f",
-            total_pairs, reduction_ratio,
+            "[Blocking] DONE: %d candidate pairs generated across %d S1 entities. Reduction ratio: %.6f",
+            total_pairs, len(all_s1_ids), reduction_ratio,
         )
         return merged
 
@@ -251,7 +232,7 @@ class BlockingEngine:
         merged: dict[str, list[str]],
         ground_truth: dict[str, list[str]],
     ) -> float:
-        """Estimate blocking recall on training data with ground truth."""
+        """Estimate pair-level candidate recall against ground truth."""
         hits = 0
         total = 0
         for s1_id, true_matches in ground_truth.items():

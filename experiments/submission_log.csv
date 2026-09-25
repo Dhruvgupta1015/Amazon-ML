@@ -1,0 +1,2 @@
+submission_id,timestamp,git_commit,model_version,blocking_version,threshold,local_f05,local_precision,local_recall,blocking_recall,public_score,notes
+sub-01,2026-09-25 15:57:49,7bd9122,v2.1-LightGBM-HardNegs,Country-MultiIndex-RankedK50,0.69,0.3973465682258004,0.4462472360717158,0.745664503968254,0.8719,PENDING_SUBMISSION,Authoritative unified pipeline submission

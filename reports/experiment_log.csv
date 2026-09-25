@@ -1,0 +1,2 @@
+run_id,date,git_commit,model,blocking,threshold,f05,precision,recall,blocking_recall,singleton_accuracy,runtime
+run-20260925-155749,2026-09-25 15:57:49,7bd9122,LightGBM-GBDT-HardNegs-28Feats,CountryPartition-RankedPruning-K50,0.69,0.3973465682258004,0.4462472360717158,0.745664503968254,0.8719,0.23070017953321365,171.59

@@ -1,0 +1,6 @@
+feature_group,num_features,macro_f05,precision,recall,singleton_accuracy,runtime_seconds
+1. Name Similarity Only (Feats 0-9),10,0.1463,0.2978,0.286,0.2083,1.11
+2. Name + Address Tokens (Feats 0-11),12,0.3617,0.4066,0.7539,0.2101,1.23
+3. Name + Address + Numeric Digits (Feats 0-17),18,0.5062,0.5516,0.7886,0.3034,1.15
+4. Full 28 Features (No Conflict Penalty),28,0.4995,0.5463,0.7861,0.2962,1.27
+5. Full 28 Features + Street Conflict Penalty,28,0.5197,0.5698,0.7796,0.3124,1.3

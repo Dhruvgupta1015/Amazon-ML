@@ -54,15 +54,21 @@ VERIFICATION:
 ```
 
 ### Reproducible Evaluation Reports:
-- [Code Audit Report](file:///reports/code_audit.md) (`reports/code_audit.md`)
+- [Pipeline Audit Report](file:///reports/pipeline_audit.md) (`reports/pipeline_audit.md`)
 - [Implementation Status JSON](file:///reports/implementation_status.json) (`reports/implementation_status.json`)
 - [Dataset Profile Markdown](file:///reports/dataset_profile.md) (`reports/dataset_profile.md`)
 - [Dataset Profile JSON](file:///reports/dataset_profile.json) (`reports/dataset_profile.json`)
 - [Blocking Strategy Benchmark](file:///reports/blocking_benchmark.csv) (`reports/blocking_benchmark.csv`)
-- [Blocking Recall Analysis](file:///reports/blocking_recall_analysis.md) (`reports/blocking_recall_analysis.md`)
+- [Blocking K-Sweep Benchmark (Ranked Pruning)](file:///reports/blocking_k_sweep.csv) (`reports/blocking_k_sweep.csv`)
+- [Empirical Blocking Recall Report](file:///reports/blocking_recall_report.md) (`reports/blocking_recall_report.md`)
 - [Validation Metrics JSON](file:///reports/validation_metrics.json) (`reports/validation_metrics.json`)
+- [Current Run Artifact (Phase 16)](file:///reports/current_run.json) (`reports/current_run.json`)
+- [Feature Ablation Report](file:///reports/feature_ablation.csv) (`reports/feature_ablation.csv`)
+- [Singleton Correctness Analysis](file:///reports/singleton_analysis.csv) (`reports/singleton_analysis.csv`)
 - [Threshold Sweep Curve CSV](file:///reports/threshold_sweep.csv) (`reports/threshold_sweep.csv`)
-- [Error Analysis CSV](file:///reports/error_analysis.csv) (`reports/error_analysis.csv`)
+- [Error Analysis Report](file:///reports/error_analysis.md) (`reports/error_analysis.md`)
+- [Experiment Tracking Log](file:///reports/experiment_log.csv) (`reports/experiment_log.csv`)
+- [Submission Strategy Log](file:///experiments/submission_log.csv) (`experiments/submission_log.csv`)
 - [Pipeline Performance & Scalability Profile](file:///reports/pipeline_performance_profile.md) (`reports/pipeline_performance_profile.md`)
 - [Honest Limitations & Future Work](file:///reports/limitations_and_future_work.md) (`reports/limitations_and_future_work.md`)
 

@@ -1,0 +1,15 @@
+{
+  "run_id": "run-20260925-155749",
+  "timestamp": "2026-09-25T15:57:49.337540",
+  "dataset_hash": "sha256_2ef67d10ddeba9e9",
+  "validation_protocol": "Entity-Stratified Grouped S1 Split (20,000 entities, Seed=42)",
+  "model": "RESOLVE.AI LightGBM GBDT (300 trees, 63 leaves) + 28 Pairwise Features + Hard Negatives",
+  "threshold": 0.69,
+  "macro_f05": 0.3973465682258004,
+  "precision": 0.4462472360717158,
+  "recall": 0.745664503968254,
+  "blocking_recall": 0.8719,
+  "reduction_ratio": 0.999878,
+  "singleton_accuracy": 0.23070017953321365,
+  "runtime_seconds": 171.59
+}

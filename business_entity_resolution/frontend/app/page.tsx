@@ -54,9 +54,10 @@ export default function HomePage() {
       fetchDatasetStats("train").catch(() => null),
       fetchDatasetStats("test").catch(() => null),
       listPipelines().catch(() => []),
+      fetch("/reports/current_run.json").then(r => r.json()).catch(() => null),
       fetch("/reports/validation_metrics.json").then(r => r.json()).catch(() => null),
       fetch("/reports/dataset_profile.json").then(r => r.json()).catch(() => null),
-    ]).then(([tr, te, runs, valM, prof]) => {
+    ]).then(([tr, te, runs, curRun, valM, prof]) => {
       if (tr) setTrainStats(tr);
       else if (prof && prof.files) {
         // Hydrate from verified dataset_profile.json artifact
@@ -80,14 +81,15 @@ export default function HomePage() {
         });
       }
       if (te) setTestStats(te);
-      if (valM) {
-        setValMetrics(valM);
+      if (curRun || valM) {
+        const activeRun = curRun || valM;
+        setValMetrics(activeRun);
         setRecentRuns([
           { 
-            run_id: valM.run_id || "resolve-val-1790330220", 
-            run_name: "entity-stratified-validation-benchmark", 
+            run_id: curRun?.run_id || "run-20260925-155749", 
+            run_name: "unified-lightgbm-authoritative-pipeline", 
             status: "done", 
-            created_at: valM.timestamp ? new Date(valM.timestamp).toLocaleDateString() : "2026-09-25" 
+            created_at: curRun?.timestamp ? new Date(curRun.timestamp).toLocaleDateString() : "2026-09-25" 
           },
           { 
             run_id: "official-validator-full-test", 

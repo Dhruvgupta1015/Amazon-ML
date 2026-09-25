@@ -1,0 +1,17 @@
+{
+  "evaluation_split": "Held-out Entity-Stratified (20,000 S1 Entities)",
+  "random_seed": 42,
+  "total_s1_entities": 20000,
+  "total_singletons": 1114,
+  "total_non_singletons": 18886,
+  "total_true_positive_mentions": 69256,
+  "pair_level_blocking_recall": 0.8719,
+  "entity_level_perfect_recall": 0.7552,
+  "reduction_ratio": 0.999878,
+  "total_candidate_pairs": 558052,
+  "avg_candidates_per_entity": 27.9,
+  "median_candidates_per_entity": 28.0,
+  "max_candidates_per_entity": 50,
+  "singletons_with_candidates_generated": 1028,
+  "true_matches_missed": 8873
+}
