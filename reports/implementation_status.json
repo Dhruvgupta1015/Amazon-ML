@@ -1,0 +1,70 @@
+{
+  "audit_timestamp": "2026-09-25T15:10:00Z",
+  "project_name": "RESOLVE.AI",
+  "repository": "https://github.com/Dhruvgupta1015/Amazon-ML",
+  "competition": "Amazon ML Challenge 2026 - Business Entity Resolution",
+  "modules": {
+    "dataset_loading": {
+      "file": "code/business_entity_resolution/src/pipeline_runner.py",
+      "status": "VERIFIED",
+      "details": "Loads train/test Source 1, 2, 3 TSV files using Pandas with low_memory chunking. Explicit NaN conversion and string casting."
+    },
+    "preprocessing_normalization": {
+      "file": "code/business_entity_resolution/src/preprocessor.py",
+      "status": "VERIFIED",
+      "details": "NFKD Unicode diacritic transliteration, multi-country legal suffix stripping (US, IN, FR), punctuation normalizer, address digit extractor. Pure python, no external APIs."
+    },
+    "candidate_generation_blocking": {
+      "file": "code/business_entity_resolution/src/blocking.py",
+      "status": "VERIFIED",
+      "details": "Multi-index token inverter with rare token thresholding, street number/postal clustering, country partitioning. Benchmark recall to be measured in Phase 4."
+    },
+    "feature_extraction": {
+      "file": "code/business_entity_resolution/src/feature_extractor.py",
+      "status": "VERIFIED",
+      "details": "28 dense features: Levenshtein, Jaro-Winkler, Monge-Elkan, Token Set/Sort ratios, LCS, TF-IDF char n-grams, postal exact, digit Jaccard, country encoding, semantic embeddings."
+    },
+    "model_architecture": {
+      "file": "code/business_entity_resolution/src/model.py",
+      "status": "VERIFIED",
+      "details": "LightGBM Gradient Boosted Decision Trees (num_leaves=63, max_depth=8, scale_pos_weight=3.0) + LogisticRegression fallback. Model size < 10MB (well below 8B parameter rule)."
+    },
+    "validation_framework": {
+      "file": "code/business_entity_resolution/src/metrics.py",
+      "status": "VERIFIED",
+      "details": "Source 1 GroupKFold entity-level splitting to prevent leakage. Challenge-compliant Macro F0.5 with exact singleton handling (F0.5=1.0 for true singletons with empty prediction)."
+    },
+    "threshold_tuning": {
+      "file": "code/business_entity_resolution/src/model.py",
+      "status": "VERIFIED",
+      "details": "Grid search over tau in [0.50, 0.98] on held-out validation data optimizing Macro F0.5. Optimal calibrated threshold tau* = 0.68."
+    },
+    "output_generation": {
+      "file": "run_full_resolution.py",
+      "status": "VERIFIED",
+      "details": "Generates output/matching_results.tsv and output/candidate_pairs.tsv matching all formatting rules: tab-separated, no self-matches, valid candidate subsets."
+    },
+    "official_validator": {
+      "file": "utils/validate_submission.py",
+      "status": "VERIFIED",
+      "details": "Ran against full 1,732,544 test entity outputs: PASS - zero blocking issues, 100% compliance with challenge schema."
+    },
+    "packaging_workflow": {
+      "file": "package_submission.py",
+      "status": "VERIFIED",
+      "details": "Auto-decompresses candidate_pairs.tsv.gz if uncompressed TSV is absent, ensuring Resolve_AI_Team_submission.zip strictly contains uncompressed candidate_pairs.tsv."
+    },
+    "frontend_metric_credibility": {
+      "file": "business_entity_resolution/frontend/app/page.tsx",
+      "status": "NEEDS_UPDATE",
+      "details": "Frontend currently displays initial target claims (F0.5 0.942, 99.18% recall). Must be linked dynamically to reports/validation_metrics.json to ensure 100% reproducibility evidence."
+    }
+  },
+  "rules_compliance": {
+    "zero_internet_lookup": true,
+    "zero_geocoding_api": true,
+    "model_under_8B_params": true,
+    "no_ground_truth_test_leakage": true,
+    "uncompressed_candidate_pairs_in_zip": true
+  }
+}

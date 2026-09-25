@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-09-25T10:10:30Z",
+  "sample_size": 10000,
+  "peak_ram_mb": 96.74,
+  "total_runtime_seconds": 39.54,
+  "stages": {
+    "data_loading": {
+      "runtime_seconds": 0.099,
+      "throughput_records_per_sec": 100983.1
+    },
+    "normalization": {
+      "runtime_seconds": 2.5802,
+      "throughput_records_per_sec": 3875.7
+    },
+    "blocking_candidate_generation": {
+      "runtime_seconds": 30.4202,
+      "throughput_entities_per_sec": 164.4,
+      "candidates_generated": 120634
+    },
+    "feature_extraction": {
+      "runtime_seconds": 5.8935,
+      "throughput_pairs_per_sec": 373.6
+    },
+    "model_inference": {
+      "runtime_seconds": 0.0595,
+      "throughput_pairs_per_sec": 839636.6
+    }
+  },
+  "scalability_projection_for_full_test_set": {
+    "total_entities": 1732544,
+    "projected_blocking_time_minutes": 175.64,
+    "projected_inference_time_minutes": 0.03,
+    "projected_peak_memory_gb": 0.33
+  }
+}

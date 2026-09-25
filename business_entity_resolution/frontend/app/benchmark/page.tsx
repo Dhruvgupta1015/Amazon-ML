@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { 
   LineChart as LineChartIcon, 
   Sliders, 
@@ -53,6 +53,47 @@ export default function BenchmarkPage() {
   const [chartMode, setChartMode] = useState<"interactive" | "recharts">("interactive");
   const [loading, setLoading] = useState(false);
   const [runsLoaded, setRunsLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch("/reports/threshold_sweep.csv")
+      .then((r) => r.text())
+      .then((csvText) => {
+        const lines = csvText.trim().split("\n");
+        if (lines.length <= 1) return;
+        const parsedPoints: ThresholdPoint[] = [];
+        let maxF05 = -1;
+        let optTau = 0.56;
+        for (let i = 1; i < lines.length; i++) {
+          const parts = lines[i].split(",");
+          if (parts.length < 10) continue;
+          const tau = parseFloat(parts[0]);
+          const baseF05 = parseFloat(parts[7]);
+          const baseP = parseFloat(parts[8]);
+          const baseR = parseFloat(parts[9]);
+          const sAcc = parseFloat(parts[4]);
+          if (!isNaN(tau) && !isNaN(baseF05)) {
+            parsedPoints.push({
+              threshold: tau,
+              macro_f05: baseF05,
+              macro_precision: baseP,
+              macro_recall: baseR,
+              singleton_accuracy: sAcc,
+            });
+            if (baseF05 > maxF05) {
+              maxF05 = baseF05;
+              optTau = tau;
+            }
+          }
+        }
+        if (parsedPoints.length > 0) {
+          setCurve(parsedPoints);
+          setOptimal(optTau);
+          setBestF05(maxF05);
+          setCurrentThreshold(optTau);
+        }
+      })
+      .catch(() => null);
+  }, []);
 
   const loadRuns = async () => {
     try {

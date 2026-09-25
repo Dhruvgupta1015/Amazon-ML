@@ -1,0 +1,5 @@
+strategy,candidate_recall,candidate_count,reduction_ratio,avg_candidates_per_s1,missing_true_matches,runtime_seconds
+Strategy A: Simple Name Token Inverted Index,45.59,240150,99.9963,12.01,37679,0.13
+Strategy B: Multi-Field (Name Tokens + Address Tokens),78.63,517763,99.9919,25.89,14798,1.31
+Strategy C: Multi-Field + Street Number Signatures,54.89,302734,99.9953,15.14,31241,0.18
+Strategy D: RESOLVE.AI Country-Partitioned Multi-Index,79.92,509163,99.9921,25.46,13909,0.92
