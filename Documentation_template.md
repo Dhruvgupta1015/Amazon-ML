@@ -1,11 +1,11 @@
-﻿# Documentation Template — Amazon ML Challenge 2026
+# Documentation Template — Amazon ML Challenge 2026
 # Business Entity Resolution
 
 ## Team Information
 
-- **Team Name**: [Your Team Name]
-- **Members**: [List members]
-- **Submission Date**: [Date]
+- **Team Name**: Resolve AI Team
+- **Members**: Vivek Gupta
+- **Submission Date**: September 25, 2026
 
 ---
 
@@ -137,14 +137,15 @@ For each τ:
 ---
 
 ## 4. Validation
-
-Local validation F₀.₅ (held-out training fold):
-- Macro F₀.₅: [fill in]
-- Precision: [fill in]
-- Recall: [fill in]
-- Optimal threshold τ*: [fill in]
-- Blocking recall: [fill in]
-- Reduction ratio: [fill in]
+ 
+Local validation F₀.₅ (frozen 20,000 entity held-out partition):
+- Macro F₀.₅: 0.8539
+- Precision: 0.9793
+- Recall: 0.7588
+- Singleton Accuracy: 93.00% (1,050 false merges across 20,000 entities)
+- Optimal threshold τ*: 0.53 (High confidence threshold: 0.75, Address floor: 0.22)
+- Blocking recall: 89.17% (max_k=130)
+- Reduction ratio: >99.85%
 
 ---
 

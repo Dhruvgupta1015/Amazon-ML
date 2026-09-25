@@ -1,0 +1,17 @@
+{
+  "run_id": "phase10-state-recall-v1",
+  "model": "Phase 10: Clean Multi-Channel Retrieval (max_k=120) + State Rejection Guard",
+  "tau": 0.52,
+  "high_confidence": 0.75,
+  "addr_floor": 0.2,
+  "max_k": 120,
+  "macro_f05": 0.8508,
+  "precision": 0.8974,
+  "recall": 0.7564,
+  "singleton_accuracy": 0.9174,
+  "false_merges": 1179,
+  "retrieval_recall_pct": 88.96,
+  "champion_f05": 0.8387,
+  "delta_vs_champion": 0.0121,
+  "validation_protocol": "v1.0-frozen-20k"
+}

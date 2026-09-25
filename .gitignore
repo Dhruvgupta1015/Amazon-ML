@@ -46,8 +46,13 @@ yarn-error.log*
 data_raw/
 *.zip.part
 
-# Ignore uncompressed files exceeding GitHub's 100MB limit
+# Ignore files exceeding GitHub's 100MB limit
+candidate_pairs.tsv
 output/candidate_pairs.tsv
+output/checkpoint_*.tsv
+data/cache/
+*.zip
+*.log
 
 # System files
 .DS_Store
@@ -55,3 +60,4 @@ Thumbs.db
 *.swp
 *.swo
 business_entity_resolution/output/
+

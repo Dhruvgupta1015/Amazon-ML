@@ -13,7 +13,5 @@
   "delta_vs_champion": 0.0457,
   "quality_gate_criteria_met": true,
   "dataset_hash": "sha256_a27ce6c4621aefc2",
-  "validation_protocol": "v1.0-frozen-20k",
-  "status": "CHAMPION_ACTIVE",
-  "promoted_at": "2026-09-25T17:16:39.055990"
+  "validation_protocol": "v1.0-frozen-20k"
 }

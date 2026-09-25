@@ -1,16 +1,16 @@
 {
   "run_id": "challenger-hybrid-v2",
-  "timestamp": "2026-09-25T16:25:17.727667",
+  "timestamp": "2026-09-25T16:54:02.449216",
   "status": "REJECTED_BY_QUALITY_GATE",
-  "rejection_reason": "Macro F0.5 (0.4088) failed to beat Champion (0.7930) by minimum delta (+0.0020). Delta was -0.3842.",
+  "rejection_reason": "Macro F0.5 (0.4097) failed to beat Champion (0.7930) by minimum delta (+0.0020). Delta was -0.3833.",
   "challenger_metrics": {
     "run_id": "challenger-hybrid-v2",
     "model": "Hybrid Precision-Guarded Heuristic Matcher",
-    "macro_f05": 0.408844557566371,
-    "precision": 0.9170573196477922,
-    "recall": 0.2887719246031746,
-    "singleton_accuracy": 0.8806104129263914,
-    "false_merges": 2136,
+    "macro_f05": 0.40970796438570606,
+    "precision": 0.9159094607458376,
+    "recall": 0.28997648809523807,
+    "singleton_accuracy": 0.8833034111310593,
+    "false_merges": 2159,
     "dataset_hash": "sha256_a27ce6c4621aefc2",
     "validation_protocol": "v1.0-frozen-20k"
   },

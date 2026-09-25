@@ -1,0 +1,49 @@
+{
+  "channels": [
+    {
+      "channel": "name_token",
+      "pair_recall_pct": 47.79,
+      "recovered": 33097
+    },
+    {
+      "channel": "rare_token",
+      "pair_recall_pct": 40.41,
+      "recovered": 27983
+    },
+    {
+      "channel": "addr_token",
+      "pair_recall_pct": 70.28,
+      "recovered": 48674
+    },
+    {
+      "channel": "street_num",
+      "pair_recall_pct": 19.71,
+      "recovered": 13647
+    },
+    {
+      "channel": "postal",
+      "pair_recall_pct": 4.73,
+      "recovered": 3275
+    },
+    {
+      "channel": "domain",
+      "pair_recall_pct": 0.0,
+      "recovered": 0
+    },
+    {
+      "channel": "ngram3",
+      "pair_recall_pct": 10.36,
+      "recovered": 7172
+    },
+    {
+      "channel": "ngram4",
+      "pair_recall_pct": 53.92,
+      "recovered": 37343
+    }
+  ],
+  "combined_pair_recall_pct": 85.64,
+  "entity_perfect_recall_pct": 71.68,
+  "avg_candidates_per_s1": 43.04,
+  "total_candidates_loaded": 369256,
+  "true_positive_coverage_pct": 100.0
+}
