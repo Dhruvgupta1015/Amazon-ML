@@ -1,0 +1,11 @@
+channel,pair_recall_pct,entity_perfect_recall_pct,avg_candidates,reduction_ratio_pct,runtime_sec
+exact_name,23.01,3.02,3.3,99.9997,0.1
+char_3gram,14.22,5.28,614.1,99.9528,3.05
+char_4gram,46.11,24.98,509.8,99.9608,3.51
+token_overlap,45.31,29.93,205.3,99.9842,0.91
+rare_token,28.33,21.1,8.1,99.9994,0.13
+addr_token,60.31,38.36,412.4,99.9683,2.3
+street_number,20.66,8.56,51.8,99.996,0.3
+postal_code,4.9,2.88,0.9,99.9999,0.04
+domain_stem,0.0,0.0,0.0,100.0,0.03
+ALL_COMBINED,85.27,69.74,1039.7,99.92,5.91

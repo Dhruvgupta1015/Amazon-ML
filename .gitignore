@@ -48,9 +48,11 @@ data_raw/
 
 # Ignore files exceeding GitHub's 100MB limit
 candidate_pairs.tsv
+matching_results.tsv
 output/candidate_pairs.tsv
 output/checkpoint_*.tsv
 data/cache/
+data/diagnostic_200k/*.tsv
 *.zip
 *.log
 

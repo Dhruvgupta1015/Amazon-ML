@@ -1,0 +1,182 @@
+{
+  "status": "PASSED",
+  "feature_count": 28,
+  "feature_names": [
+    "levenshtein_name",
+    "jaro_winkler_name",
+    "token_jaccard_name",
+    "token_containment_name",
+    "exact_name_match",
+    "prefix_4_name",
+    "suffix_4_name",
+    "char_len_ratio_name",
+    "token_count_diff_name",
+    "legal_suffix_match",
+    "rare_token_shared",
+    "token_jaccard_address",
+    "digit_jaccard_address",
+    "street_number_match",
+    "postal_code_match",
+    "levenshtein_address",
+    "both_have_address",
+    "address_len_ratio",
+    "country_is_us",
+    "country_is_india",
+    "country_is_france",
+    "source_is_s2",
+    "source_is_s3",
+    "name_x_addr_overlap",
+    "min_token_len_name",
+    "first_token_match",
+    "last_token_match",
+    "numeric_conflict_penalty"
+  ],
+  "train_columns_match_inference": true,
+  "val_columns_match_inference": true,
+  "nan_count": 0,
+  "inf_count": 0,
+  "feature_ranges": {
+    "levenshtein_name": {
+      "min": 0.0,
+      "max": 0.8621,
+      "dtype": "float32"
+    },
+    "jaro_winkler_name": {
+      "min": 0.0,
+      "max": 0.9724,
+      "dtype": "float32"
+    },
+    "token_jaccard_name": {
+      "min": 1.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "token_containment_name": {
+      "min": 0.0,
+      "max": 0.0,
+      "dtype": "float32"
+    },
+    "exact_name_match": {
+      "min": 0.0,
+      "max": 0.0,
+      "dtype": "float32"
+    },
+    "prefix_4_name": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "suffix_4_name": {
+      "min": 0.0,
+      "max": 0.0,
+      "dtype": "float32"
+    },
+    "char_len_ratio_name": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "token_count_diff_name": {
+      "min": 1.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "legal_suffix_match": {
+      "min": 0.0,
+      "max": 0.0,
+      "dtype": "float32"
+    },
+    "rare_token_shared": {
+      "min": 0.0,
+      "max": 0.0,
+      "dtype": "float32"
+    },
+    "token_jaccard_address": {
+      "min": 0.0,
+      "max": 0.8333,
+      "dtype": "float32"
+    },
+    "digit_jaccard_address": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "street_number_match": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "postal_code_match": {
+      "min": 0.5,
+      "max": 0.5,
+      "dtype": "float32"
+    },
+    "levenshtein_address": {
+      "min": 0.0,
+      "max": 0.8235,
+      "dtype": "float32"
+    },
+    "both_have_address": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "address_len_ratio": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "country_is_us": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "country_is_india": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "country_is_france": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "source_is_s2": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "source_is_s3": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "name_x_addr_overlap": {
+      "min": 0.0,
+      "max": 0.8333,
+      "dtype": "float32"
+    },
+    "min_token_len_name": {
+      "min": 0.0,
+      "max": 3.0,
+      "dtype": "float32"
+    },
+    "first_token_match": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    },
+    "last_token_match": {
+      "min": 0.0,
+      "max": 0.0,
+      "dtype": "float32"
+    },
+    "numeric_conflict_penalty": {
+      "min": 0.0,
+      "max": 1.0,
+      "dtype": "float32"
+    }
+  },
+  "normalization_engine": "NFKD Unicode Transliteration + Legal Entity Suffix Stripping + Address Abbreviation Expansion",
+  "authoritative_module": "utils/feature_extractor_28d.py"
+}

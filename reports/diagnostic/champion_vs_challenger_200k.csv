@@ -1,0 +1,3 @@
+model_role,name,macro_f05,precision,recall,singleton_accuracy_pct,status
+CHAMPION,Phase 10b Champion Heuristic,0.8259,0.9945,0.675,97.05,REPLACED
+CHALLENGER,Hybrid LightGBM + Address Singleton Guard,0.8615,0.9843,0.7584,94.69,PROMOTED_CHAMPION

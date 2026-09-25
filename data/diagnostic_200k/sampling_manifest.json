@@ -1,0 +1,29 @@
+{
+  "benchmark_name": "AMAZON_ML_2026_DIAGNOSTIC_200K",
+  "random_seed": 20260925,
+  "creation_timestamp": "2026-09-25 23:18:34",
+  "total_source1_entities": 200000,
+  "countries": {
+    "US": 119950,
+    "India": 80050
+  },
+  "singleton_count": 11167,
+  "singleton_rate": 0.055835,
+  "match_count_distribution": {
+    "4": 43877,
+    "3": 48102,
+    "5": 52052,
+    "2": 33998,
+    "0": 11167,
+    "1": 10804
+  },
+  "true_matches_s2_count": 334986,
+  "true_matches_s3_count": 357434,
+  "total_true_matches": 692420,
+  "strata_count": 1111,
+  "source1_file": "source1.tsv",
+  "source2_file": "source2.tsv",
+  "source3_file": "source3.tsv",
+  "ground_truth_file": "ground_truth.tsv",
+  "integrity_verified": true
+}

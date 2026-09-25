@@ -1,0 +1,22 @@
+{
+  "benchmark": "AMAZON_ML_2026_DIAGNOSTIC_200K",
+  "timestamp": "2026-09-25 23:31:05",
+  "model": "Phase 10b Champion (Address Abbreviation Expansion + Multi-Channel)",
+  "tau": 0.53,
+  "high_confidence": 0.75,
+  "addr_floor": 0.22,
+  "max_k": 130,
+  "macro_f05": 0.7281,
+  "macro_precision": 0.7876,
+  "macro_recall": 0.6447,
+  "singleton_accuracy": 0.7556,
+  "singleton_accuracy_pct": 75.56,
+  "pair_blocking_recall_pct": 73.19,
+  "entity_perfect_recall_pct": 55.25,
+  "avg_candidates_per_entity": 26.9,
+  "false_merges": 70033,
+  "missed_matches": 250331,
+  "total_entities_evaluated": 200000,
+  "eval_time_seconds": 250.62,
+  "throughput_entities_per_sec": 798.0
+}

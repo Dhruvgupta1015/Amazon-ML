@@ -1,0 +1,15 @@
+{
+  "benchmark": "AMAZON_ML_2026_DIAGNOSTIC_200K",
+  "timestamp": "2026-09-25 23:57:33",
+  "promoted": true,
+  "active_model": "Hybrid LightGBM + Address Singleton Guard",
+  "optimal_threshold": 0.88,
+  "high_confidence": 0.7,
+  "addr_floor": 0.16,
+  "max_k": 130,
+  "feature_count": 28,
+  "decision_reason": "CHALLENGER PROMOTED: Improved overall precision and singleton accuracy.",
+  "champion_f05": 0.8259,
+  "challenger_f05": 0.8615,
+  "f05_gain": 0.0356
+}

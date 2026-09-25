@@ -1,0 +1,7 @@
+failure_stage,failure_count,percentage_of_failures
+1_not_generated_by_blocking,185630,74.30%
+4_score_below_tau,44381,17.76%
+5_addr_floor_rejected,12199,4.88%
+3_state_conflict,6282,2.51%
+3_street_postal_conflict,1272,0.51%
+2_pruned_by_k_limit,81,0.03%
