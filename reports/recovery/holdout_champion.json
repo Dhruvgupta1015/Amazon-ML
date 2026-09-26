@@ -1,0 +1,15 @@
+{
+  "macro_f05": 0.6727061846887721,
+  "precision": 0.9822568487993487,
+  "recall": 0.5301738756613756,
+  "singleton_accuracy": 0.9474940334128878,
+  "singletons_correct": 1588,
+  "singletons_total": 1676,
+  "false_merges": 1378,
+  "missed_matches": 51657,
+  "mean_predicted_matches": 1.7880666666666667,
+  "max_predicted_matches": 13,
+  "pct_s1_empty": 26.41,
+  "pct_s1_ge_5": 6.833333333333333,
+  "pct_s1_ge_10": 0.01
+}

@@ -52,10 +52,16 @@ matching_results.tsv
 submission.tsv
 output/candidate_pairs.tsv
 output/checkpoint_*.tsv
-data/cache/
-data/diagnostic_200k/*.tsv
+output/recovery_checkpoint_*.tsv
+output/*.gz
+*.gz
 *.zip
 *.log
+*.db
+*.db-wal
+*.db-shm
+data/cache/
+data/diagnostic_200k/*.tsv
 
 # System files
 .DS_Store

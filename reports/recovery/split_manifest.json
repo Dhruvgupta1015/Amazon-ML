@@ -1,0 +1,13 @@
+{
+  "benchmark": "AMAZON_ML_2026_STRICT_GROUPED_HOLDOUT",
+  "random_seed": 20260925,
+  "train_count": 140000,
+  "calib_count": 30000,
+  "holdout_count": 30000,
+  "total_entities": 200000,
+  "grouping_unit": "source1_entity_id",
+  "pairwise_overlap": 0,
+  "train_file": "split_train_140k_s1_ids.json",
+  "calib_file": "split_calib_30k_s1_ids.json",
+  "holdout_file": "split_holdout_30k_s1_ids.json"
+}

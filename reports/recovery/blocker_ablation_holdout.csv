@@ -1,0 +1,9 @@
+Channel,Pair_Recall,Entity_Perfect_Recall,Avg_Candidates,Total_Hits,Runtime_Seconds
+1. Exact Alpha Name,23.11,3.21,3.3,24011,0.1
+2. Name Token Overlap,42.32,29.71,178.6,43976,0.43
+3. Rare Name Tokens,23.85,17.55,5.3,24789,0.12
+4. Address Tokens,64.35,41.65,410.9,66878,1.09
+5. Numeric Digits (Postal/Street),24.27,10.48,95.8,25226,0.3
+6. Character 3-Grams,16.1,6.41,721.9,16733,1.6
+7. Character 4-Grams,48.88,27.55,596.5,50792,1.78
+8. Multi-Channel Union (All Combined),86.89,72.02,1500.3,90295,8.74
